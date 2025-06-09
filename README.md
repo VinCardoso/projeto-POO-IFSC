@@ -2,9 +2,9 @@
      width="300px"
      style="padding: 10px">
 
-# << Título do projeto >>
+# Jogo de Pong
 
-## << Descrição breve do domínio do problema >>
+## Esse repositório guarda um projeto do jogo de Pong em C++
 
 > Repositório destinado para o desenvolvimento do projeto final da discipliana PRG22107 - Programação orienta a objeto. 
 > 
