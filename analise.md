@@ -14,7 +14,7 @@ A partida se encerra quando um dos jogadores atinge uma pontuação pré-determi
 
 ## Diagrama de Casos de Uso
 
-[**Caso de Uso: Iniciar e Controlar Pontuação Jogo**](inicar-jogo.md)
+[**Caso de Uso: Iniciar e Controlar Pontuação Jogo**](inicar-jogo.md)<br>
 [**Caso de Uso: Mover Bola**](movimentacao-bola.md)
  
 ## Diagrama de Domínio do problema
