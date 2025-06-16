@@ -1,61 +1,43 @@
-# Caso de Uso: Jogar Pong
+# Caso de Uso: Mover Bola
 
 ## Objetivo:
-Descrever a lógica principal de uma partida de Pong, na qual dois jogadores controlam raquetes para rebater uma bola e marcar pontos.
+Fazar a movimentação da raquetes;
 
-## Requisitos
-- RF1: Iniciar e executar uma partida de Pong.
-- RF2: Registrar a pontuação de cada jogador.
-- RF3: Detectar colisões da bola com raquetes e limites da tela.
+## Requisitos:
+- RF1: Saber se tem 1 ou 2 jogadores;
+- RF2: Mover raquetes em conjunto;
+- RF3: Mover raquetes de forma independente;
 
-## Atores
-- Jogador 1 
-- Jogador 2 
+## Atores:
+- Raquete 1;
+- Raquete 2;
 
-## Prioridade
-Não se aplica.
+## Prioridade:
+Não se Aplica
 
-## Pré-condições
-- As raquetes e a bola devem estar posicionadas na posição inicial.
-- O placar deve começar em 0-0.
+## Pré-Condições:
+- Inicia o jogo já com 1 ou 2 jogadores;
 
-## Frequência de Uso
-Não se aplica.
+## Frequência de Uso:
+Não se aplica;
 
-## Criticidade
-Não se aplica.
+## Criticidade:
+Não se Aplica
 
-## Condição de Entrada
-O jogador pressiona a tecla Enter para o início de uma nova partida.
+## Fluxo Principal:
 
-## Fluxo Principal
+### Loop do Jogo:
+- Verifica o local atual de cada raquete;
+- Se for 1 jogador ao mover a raquete move as duas ao mesmo tempo;
+- Se for 2 jogadores, vão ter mais dois botões de controle e elas são movidas de forma idenpendente;
 
-### Inicialização:
-- Instancia dois objetos Paddle e um objeto Ball.
-- Zera o placar e coloca os elementos nas posições iniciais.
+## Fluxo Alternativo:
+Não se aplica
 
-### Loop de Jogo: Ocorre enquanto nenhum jogador atingir 5 pontos.
-- Detecção: O sistema detecta colisões e ajusta a direção da bola.
-- Pontuação: O jogador correspondente pontua.
-- Verificação de Término: O sistema exibe uma mensagem de vencedor quando um jogador atinge 5 pontos e encerra o loop.
-
-## Fluxo Alternativo
-Se o jogador pausar o jogo (tecla P), o loop do jogo é suspenso até ser despausado.
-
-## Pós-condições
-A partida foi finalizada.
-O vencedor foi registrado.
-As estatísticas de placar foram atualizadas.
+### Pós Condições:
+Não se aplica
 
 ## Regras de Negócio
-- A partida é vencida ao alcançar 5 pontos.
-- A cada 2 pontos marcados, a velocidade da bola aumenta.
-- As raquetes têm tamanho e velocidade fixos e não podem sair da área visível.
-
-
-
-<div align="center">
-
-[Retroceder](analise.md)
-
-</div>
+- Pode mover para cima e para baixo;
+- Tem os limites da parete superior e inferior;
+- Com um jogador usa as teclas ⬆ e ⬇, se tiver dois usa para o lado esquerdo as teclas W e S;
