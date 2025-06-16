@@ -1,4 +1,4 @@
-# Caso de Uso: Mover Bola
+# Caso de Uso: Mover Raquetes
 
 ## Objetivo:
 Fazar a movimentação da raquetes;
