@@ -9,7 +9,6 @@ qtGraphics::qtGraphics(QWidget *parent)
 
     _layout = new QVBoxLayout();
     _layout->addWidget(_view);
-
     setLayout(_layout);
     setWindowTitle("Pong Game - Vinicius");
 }

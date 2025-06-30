@@ -21,8 +21,8 @@ public:
     explicit MyScene(QObject *parent = nullptr);
 
     // QGraphicsScene interface
-// protected:
-//     void keyPressEvent(QKeyEvent *event) override;
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
 
     // QGraphicsScene interface
 // protected:

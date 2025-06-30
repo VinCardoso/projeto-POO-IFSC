@@ -43,28 +43,12 @@ MyScene::MyScene(QObject *parent)
     _player2Paddle = new Paddle(player2PaddleX, player2PaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
     addItem(_player2Paddle);
 
-
-    // _rect = addRect(QRectF(-50,-50,100,100));
-    // _rect->setPos(QPointF(50,50));
-    // _rect->setRotation(45);
-    // QPen pen(Qt::red);
-    // pen.setWidth(4);
-    // _rect->setPen(pen);
-    // _rect->setBrush(Qt::blue);
-    // _rect->setFlag(QGraphicsItem::ItemIsFocusable);
-
-
     // _ball = new Ball(200,200,100,100);
     // _ball->setPen(pen);
     // _ball->setBrush(Qt::gray);
     // _ball->setFlag(QGraphicsItem::ItemIsFocusable);
     // _ball->setFlag(QGraphicsItem::ItemIsMovable);
     // addItem(_ball);
-
-
-    // addLine(-200,0,200,0);
-    // addLine(0,-200,0,200);
-
 
     // _timer = new QTimer;
     // QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(advance()));
@@ -84,29 +68,36 @@ MyScene::MyScene(QObject *parent)
 //     addItem(gameBall); // Adiciona a bola à cena
 // }
 
-// void MyScene::keyPressEvent(QKeyEvent *event)
-// {
-//     qDebug() << "Key press event in MyScene";
+void MyScene::keyPressEvent(QKeyEvent *event)
+{
+    qDebug() << "Key press event in MyScene";
 
-//     QGraphicsItem * item = this->focusItem();
-//     if(item == nullptr){
-//         qDebug() << "No item in focus!";
-//     } else {
-//         if( event->key() == Qt::Key_Left) {
-//             item->moveBy(-1,0);
-//         }
-//         if( event->key() == Qt::Key_Right) {
-//             item->moveBy(1,0);
-//         }
-//         if( event->key() == Qt::Key_Up) {
-//             item->moveBy(0,-1);
-//         }
-//         if( event->key() == Qt::Key_Down) {
-//             item->moveBy(0,1);
-//         }
-//     }
-//     // QGraphicsScene::keyPressEvent(event);
-// }
+    QGraphicsItem * paddle1 = _player1Paddle;
+    if(paddle1 == nullptr){
+        qDebug() << "No item in focus!";
+    } else {
+        if( event->key() == Qt::Key_Up) {
+            paddle1->moveBy(0,-20);
+        }
+        if( event->key() == Qt::Key_Down) {
+            paddle1->moveBy(0,20);
+        }
+    }
+
+    QGraphicsItem * paddle2 = _player2Paddle;
+    if(paddle2 == nullptr){
+        qDebug() << "No item in focus!";
+    } else {
+        if( event->key() == Qt::Key_W) {
+            paddle2->moveBy(0,-20);
+        }
+        if( event->key() == Qt::Key_S) {
+            paddle2->moveBy(0,20);
+        }
+    }
+
+    QGraphicsScene::keyPressEvent(event);
+}
 
 // void MyScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 // {
