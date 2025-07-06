@@ -43,30 +43,7 @@ MyScene::MyScene(QObject *parent)
     _player2Paddle = new Paddle(player2PaddleX, player2PaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
     addItem(_player2Paddle);
 
-    // _ball = new Ball(200,200,100,100);
-    // _ball->setPen(pen);
-    // _ball->setBrush(Qt::gray);
-    // _ball->setFlag(QGraphicsItem::ItemIsFocusable);
-    // _ball->setFlag(QGraphicsItem::ItemIsMovable);
-    // addItem(_ball);
-
-    // _timer = new QTimer;
-    // QObject::connect(_timer, SIGNAL(timeout()), this, SLOT(advance()));
-    // _timer->start(1000/30);
 }
-
-// void MyScene::setupBall()
-// {
-//     // Calcula a posição central para a bola
-//     // Lembre-se que setRect(x, y, width, height) define o canto superior esquerdo do retângulo que envolve a elipse.
-//     // Para centralizar, subtraímos metade do tamanho da bola das coordenadas centrais da cena.
-//     qreal ballX = (SCENE_WIDTH / 2.0) - (BALL_SIZE / 2.0);
-//     qreal ballY = (SCENE_HEIGHT / 2.0) - (BALL_SIZE / 2.0);
-
-//     // Cria a instância da bola
-//     gameBall = new Ball(ballX, ballY, BALL_SIZE, BALL_SIZE);
-//     addItem(gameBall); // Adiciona a bola à cena
-// }
 
 void MyScene::keyPressEvent(QKeyEvent *event)
 {
@@ -98,10 +75,3 @@ void MyScene::keyPressEvent(QKeyEvent *event)
 
     QGraphicsScene::keyPressEvent(event);
 }
-
-// void MyScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
-// {
-//     QPointF pos = event->scenePos();
-//     _ball->setTarget(pos);
-//     qDebug() << "Clicked in " << pos.x() << "," << pos.y();
-// }
