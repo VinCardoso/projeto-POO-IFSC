@@ -9,9 +9,6 @@
 
 class MyScene : public QGraphicsScene
 {
-    // QGraphicsRectItem * _rect;
-    // Ball * _ball;
-    // QTimer * _timer;
     Paddle * _player1Paddle;
     Paddle * _player2Paddle;
 

@@ -1,16 +1,19 @@
 #include "myscene.h"
 #include <QDebug>
-// #include <QGraphicsSceneMouseEvent>
 #include <QPointF>
 
 // Variáveis
 #define SCENE_WIDTH 800
 #define SCENE_HEIGHT 400
 #define WALL_THICKNESS 20
+
 #define BALL_SIZE 20
+
 #define PADDLE_WIDTH 20
 #define PADDLE_HEIGHT 100
 #define PADDLE_MARGIN 10
+
+#define PADDLE_MOVE_SPEED 1
 
 
 MyScene::MyScene(QObject *parent)
@@ -31,15 +34,22 @@ MyScene::MyScene(QObject *parent)
     bottomWall->setBrush(wallBrush);
     addItem(bottomWall);
 
-    // Raquete Player 1
+    // Define the boundaries for the paddles
+    qreal topBoundary = WALL_THICKNESS;
+    qreal bottomBoundary = SCENE_HEIGHT - WALL_THICKNESS - PADDLE_HEIGHT;
+
+    // Raquete Player 1 (Left Paddle)
     qreal player1PaddleX = PADDLE_MARGIN;
-    qreal player1PaddleY = (SCENE_HEIGHT / 2.0) - (PADDLE_HEIGHT / 2.0); // Centraliza verticalmente
+    qreal player1PaddleY = ((SCENE_HEIGHT - (2  * WALL_THICKNESS))/2 - (PADDLE_HEIGHT / 2.0));
+    // Create the paddle and give it its boundaries
     _player1Paddle = new Paddle(player1PaddleX, player1PaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
     addItem(_player1Paddle);
 
-    // Raquete Player 2
+    // Definir Local Raquete 2 - Direita
     qreal player2PaddleX = SCENE_WIDTH - PADDLE_MARGIN - PADDLE_WIDTH;
-    qreal player2PaddleY = (SCENE_HEIGHT / 2.0) - (PADDLE_HEIGHT / 2.0); // Centraliza verticalmente
+    qreal player2PaddleY = ((SCENE_HEIGHT - (2  * WALL_THICKNESS))/2 - (PADDLE_HEIGHT / 2.0));
+
+    // Criar Raquete 2 - Direita
     _player2Paddle = new Paddle(player2PaddleX, player2PaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
     addItem(_player2Paddle);
 
@@ -47,30 +57,18 @@ MyScene::MyScene(QObject *parent)
 
 void MyScene::keyPressEvent(QKeyEvent *event)
 {
-    qDebug() << "Key press event in MyScene";
-
-    QGraphicsItem * paddle1 = _player1Paddle;
-    if(paddle1 == nullptr){
-        qDebug() << "No item in focus!";
-    } else {
-        if( event->key() == Qt::Key_Up) {
-            paddle1->moveBy(0,-20);
-        }
-        if( event->key() == Qt::Key_Down) {
-            paddle1->moveBy(0,20);
-        }
+    // Player 1 - Left Paddle
+    if (event->key() == Qt::Key_W) {
+        _player1Paddle->moveUp();
+    } else if (event->key() == Qt::Key_S) {
+        _player1Paddle->moveDown();
     }
 
-    QGraphicsItem * paddle2 = _player2Paddle;
-    if(paddle2 == nullptr){
-        qDebug() << "No item in focus!";
-    } else {
-        if( event->key() == Qt::Key_W) {
-            paddle2->moveBy(0,-20);
-        }
-        if( event->key() == Qt::Key_S) {
-            paddle2->moveBy(0,20);
-        }
+    // Player 2 - Right Paddle
+    if (event->key() == Qt::Key_Up) {
+        _player2Paddle->moveUp();
+    } else if (event->key() == Qt::Key_Down) {
+        _player2Paddle->moveDown();
     }
 
     QGraphicsScene::keyPressEvent(event);
