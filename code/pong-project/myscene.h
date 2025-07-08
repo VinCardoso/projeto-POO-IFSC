@@ -6,11 +6,15 @@
 #include <QGraphicsEllipseItem>
 #include <QKeyEvent>
 #include "paddle.h"
+#include "ball.h"
+#include <QTimer>
 
 class MyScene : public QGraphicsScene
 {
     Paddle * _player1Paddle;
     Paddle * _player2Paddle;
+    Ball * _ball;
+    QTimer * _timer;
 
 public:
     explicit MyScene(QObject *parent = nullptr);
