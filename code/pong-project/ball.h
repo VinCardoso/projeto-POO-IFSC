@@ -2,23 +2,17 @@
 #define BALL_H
 
 #include <QGraphicsEllipseItem>
-#include <QObject> // Necessário para usar QTimer e outros recursos do Qt
+#include <QObject>
 
 class Ball : public QObject, public QGraphicsEllipseItem
 {
-    Q_OBJECT // Macro necessária para classes com signals e slots
+    Q_OBJECT
 
 public:
     Ball(QGraphicsItem *parent = nullptr);
 
-    qreal speedX() const;
-    qreal speedY() const;
-
-    void setSpeedX(qreal newSpeedX);
-    void setSpeedY(qreal newSpeedY);
-
 public slots:
-    void move(); // Slot que será chamado pelo timer para mover a bola
+    void move();
 
 private:
     qreal _speedX;

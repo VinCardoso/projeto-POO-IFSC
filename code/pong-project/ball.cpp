@@ -5,7 +5,6 @@
 #include <QGraphicsScene>
 #include <QDebug>
 
-// CORREÇÃO: Adicionar as definições de limites para a bola saber onde as paredes estão.
 #define SCENE_WIDTH 800
 #define SCENE_HEIGHT 400
 #define WALL_THICKNESS 20
@@ -14,7 +13,7 @@
 Ball::Ball(QGraphicsItem *parent)
     : QObject(), QGraphicsEllipseItem(parent)
 {
-    // Define o tamanho e a cor da bola
+    // Cria Bola
     setRect(0, 0, 20, 20);
     setBrush(Qt::white);
 
@@ -25,13 +24,16 @@ Ball::Ball(QGraphicsItem *parent)
 
 void Ball::move()
 {
-    // --- Verificação de Colisão com PADDLE ---
+    // Verificação de Colisão com Raquete
     QList<QGraphicsItem *> colliding_items = collidingItems();
+
     for (QGraphicsItem *item : colliding_items) {
+
         Paddle *paddle = dynamic_cast<Paddle*>(item);
+
         if (paddle) {
-            // Colidiu com um paddle
-            qDebug() << "Collision with Paddle detected!";
+            // Colidiu com Raquete
+            qDebug() << "Bateu na Raquete";
             _speedX = -_speedX * 1.1;
             qreal paddleCenter = paddle->y() + paddle->rect().height() / 2;
             qreal ballCenter = y() + rect().height() / 2;

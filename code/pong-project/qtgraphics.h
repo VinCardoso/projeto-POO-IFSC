@@ -13,6 +13,7 @@ class qtGraphics : public QWidget
     MyScene * _scene;
     QGraphicsView * _view;
     QVBoxLayout * _layout;
+
 public:
     qtGraphics(QWidget *parent = nullptr);
     ~qtGraphics();
