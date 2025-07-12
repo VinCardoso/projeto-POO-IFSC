@@ -22,19 +22,19 @@ MyScene::MyScene(QObject *parent)
 
     // Parede de Cima
         QGraphicsRectItem *topWall = new QGraphicsRectItem();
-        topWall->setRect(0, 0, SCENE_WIDTH, WALL_THICKNESS);
+        topWall->setRect(0, 0, Constants::SCENE_WIDTH, WALL_THICKNESS);
         topWall->setBrush(wallBrush);
         addItem(topWall);
 
     // Parede de Baixo
         QGraphicsRectItem *bottomWall = new QGraphicsRectItem();
-        bottomWall->setRect(0, SCENE_HEIGHT - WALL_THICKNESS, SCENE_WIDTH, WALL_THICKNESS);
+        bottomWall->setRect(0, SCENE_HEIGHT - WALL_THICKNESS, Constants::SCENE_WIDTH, WALL_THICKNESS);
         bottomWall->setBrush(wallBrush);
         addItem(bottomWall);
 
     // Gol - Lado Esqerdo
         QGraphicsRectItem *golEsq = new QGraphicsRectItem();
-        golEsq->setRect(0, WALL_THICKNESS, GOAL_WIDTH, SCENE_HEIGHT - 2 * WALL_THICKNESS);
+        golEsq->setRect(0, WALL_THICKNESS, GOAL_WIDTH, Constants::SCENE_HEIGHT - 2 * WALL_THICKNESS);
         golEsq->setBrush(wallBrush);
         addItem(golEsq);
 
@@ -47,15 +47,15 @@ MyScene::MyScene(QObject *parent)
 
     // Definir Local Raquete 1 - Esquerda
         qreal player1PaddleX = PADDLE_MARGIN;
-        qreal player1PaddleY = ((SCENE_HEIGHT - (2  * WALL_THICKNESS))/2 - (PADDLE_HEIGHT / 2.0));
+        qreal player1PaddleY = ((Constants::SCENE_HEIGHT - (2  * WALL_THICKNESS))/2 - (PADDLE_HEIGHT / 2.0));
 
     // Criar Raquete 1 - Esquerda
         _player1Paddle = new Paddle(player1PaddleX, player1PaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
         addItem(_player1Paddle);
 
     // Definir Local Raquete 2 - Direita
-        qreal player2PaddleX = SCENE_WIDTH - PADDLE_MARGIN - PADDLE_WIDTH;
-        qreal player2PaddleY = ((SCENE_HEIGHT - (2  * WALL_THICKNESS))/2 - (PADDLE_HEIGHT / 2.0));
+        qreal player2PaddleX = Constants::SCENE_WIDTH - PADDLE_MARGIN - PADDLE_WIDTH;
+        qreal player2PaddleY = ((Constants::SCENE_HEIGHT - (2  * WALL_THICKNESS))/2 - (PADDLE_HEIGHT / 2.0));
 
     // Criar Raquete 2 - Direita
         _player2Paddle = new Paddle(player2PaddleX, player2PaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
@@ -63,7 +63,7 @@ MyScene::MyScene(QObject *parent)
 
     // Adicionar Bola
         _ball = new Ball();
-        _ball->setPos(SCENE_WIDTH / 2.0 - _ball->rect().width() / 2.0, SCENE_HEIGHT / 2.0 - _ball->rect().height() / 2.0);
+        _ball->setPos(Constants::SCENE_WIDTH / 2.0 - _ball->rect().width() / 2.0, Constants::SCENE_HEIGHT / 2.0 - _ball->rect().height() / 2.0);
         addItem(_ball);
 
     // Criar o timer para bola

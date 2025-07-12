@@ -17,6 +17,7 @@ SOURCES += \
 
 HEADERS += \
     ball.h \
+    constants.h \
     myscene.h \
     paddle.h \
     qtgraphics.h

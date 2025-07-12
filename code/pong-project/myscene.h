@@ -9,6 +9,8 @@
 #include "ball.h"
 #include <QTimer>
 
+#include "constants.h"
+
 class MyScene : public QGraphicsScene
 {
     Paddle * _player1Paddle;
