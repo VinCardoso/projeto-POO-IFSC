@@ -2,18 +2,6 @@
 #include <QDebug>
 #include <QPointF>
 
-
-// Variáveis
-#define SCENE_WIDTH 800
-#define SCENE_HEIGHT 400
-#define WALL_THICKNESS 20
-#define GOAL_WIDTH 5
-
-#define PADDLE_WIDTH 20
-#define PADDLE_HEIGHT 100
-#define PADDLE_MARGIN 15
-
-
 MyScene::MyScene(QObject *parent)
     : QGraphicsScene{parent}
 {
@@ -22,43 +10,43 @@ MyScene::MyScene(QObject *parent)
 
     // Parede de Cima
         QGraphicsRectItem *topWall = new QGraphicsRectItem();
-        topWall->setRect(0, 0, Constants::SCENE_WIDTH, WALL_THICKNESS);
+        topWall->setRect(0, 0, Constants::SCENE_WIDTH, Constants::WALL_THICKNESS);
         topWall->setBrush(wallBrush);
         addItem(topWall);
 
     // Parede de Baixo
         QGraphicsRectItem *bottomWall = new QGraphicsRectItem();
-        bottomWall->setRect(0, SCENE_HEIGHT - WALL_THICKNESS, Constants::SCENE_WIDTH, WALL_THICKNESS);
+        bottomWall->setRect(0, Constants::SCENE_HEIGHT - Constants::WALL_THICKNESS, Constants::SCENE_WIDTH, Constants::WALL_THICKNESS);
         bottomWall->setBrush(wallBrush);
         addItem(bottomWall);
 
     // Gol - Lado Esqerdo
         QGraphicsRectItem *golEsq = new QGraphicsRectItem();
-        golEsq->setRect(0, WALL_THICKNESS, GOAL_WIDTH, Constants::SCENE_HEIGHT - 2 * WALL_THICKNESS);
+        golEsq->setRect(0, Constants::WALL_THICKNESS, Constants::GOAL_WIDTH, Constants::SCENE_HEIGHT - 2 * Constants::WALL_THICKNESS);
         golEsq->setBrush(wallBrush);
         addItem(golEsq);
 
     // Gol - Lado Direito
         QGraphicsRectItem *golDir = new QGraphicsRectItem();
-        golDir->setRect(SCENE_WIDTH - GOAL_WIDTH, WALL_THICKNESS, GOAL_WIDTH, SCENE_HEIGHT - 2 * WALL_THICKNESS);
+        golDir->setRect(Constants::SCENE_WIDTH - Constants::GOAL_WIDTH, Constants::WALL_THICKNESS, Constants::GOAL_WIDTH, Constants::SCENE_HEIGHT - 2 * Constants::WALL_THICKNESS);
         golDir->setBrush(wallBrush);
         addItem(golDir);
 
 
     // Definir Local Raquete 1 - Esquerda
-        qreal player1PaddleX = PADDLE_MARGIN;
-        qreal player1PaddleY = ((Constants::SCENE_HEIGHT - (2  * WALL_THICKNESS))/2 - (PADDLE_HEIGHT / 2.0));
+        qreal player1PaddleX = Constants::PADDLE_MARGIN;
+        qreal player1PaddleY = ((Constants::SCENE_HEIGHT - (2  * Constants::WALL_THICKNESS))/2 - (Constants::PADDLE_HEIGHT / 2.0));
 
     // Criar Raquete 1 - Esquerda
-        _player1Paddle = new Paddle(player1PaddleX, player1PaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
+        _player1Paddle = new Paddle(player1PaddleX, player1PaddleY, Constants::PADDLE_WIDTH, Constants::PADDLE_HEIGHT);
         addItem(_player1Paddle);
 
     // Definir Local Raquete 2 - Direita
-        qreal player2PaddleX = Constants::SCENE_WIDTH - PADDLE_MARGIN - PADDLE_WIDTH;
-        qreal player2PaddleY = ((Constants::SCENE_HEIGHT - (2  * WALL_THICKNESS))/2 - (PADDLE_HEIGHT / 2.0));
+        qreal player2PaddleX = Constants::SCENE_WIDTH - Constants::PADDLE_MARGIN - Constants::PADDLE_WIDTH;
+        qreal player2PaddleY = ((Constants::SCENE_HEIGHT - (2  * Constants::WALL_THICKNESS))/2 - (Constants::PADDLE_HEIGHT / 2.0));
 
     // Criar Raquete 2 - Direita
-        _player2Paddle = new Paddle(player2PaddleX, player2PaddleY, PADDLE_WIDTH, PADDLE_HEIGHT);
+        _player2Paddle = new Paddle(player2PaddleX, player2PaddleY, Constants::PADDLE_WIDTH, Constants::PADDLE_HEIGHT);
         addItem(_player2Paddle);
 
     // Adicionar Bola
