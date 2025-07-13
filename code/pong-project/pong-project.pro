@@ -10,16 +10,20 @@ CONFIG += c++17
 
 SOURCES += \
     ball.cpp \
+    game_object.cpp \
     main.cpp \
     myscene.cpp \
     paddle.cpp \
+    player.cpp \
     qtgraphics.cpp
 
 HEADERS += \
     ball.h \
     constants.h \
+    game_object.h \
     myscene.h \
     paddle.h \
+    player.h \
     qtgraphics.h
 
 # Default rules for deployment.
