@@ -1,22 +1,40 @@
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 
+#include <QSizeF>
+#include <QPointF>
+
 namespace Constants {
 
     // Dimensões da tela
     const int SCENE_WIDTH = 800;
     const int SCENE_HEIGHT = 400;
 
-    // Raquetes
-    const int PADDLE_WIDTH = 20;
-    const int PADDLE_HEIGHT = 100;
-    const int PADDLE_MARGIN = 15;
+    const int UI_HEADER_HEIGHT = 60;
+
+    // Tamanho da Raquete
+    const QSizeF PADDLE_SIZE = QSizeF(15, 100);
+
+    // Velocidade da raquete (pixels por segundo);
+    const qreal PADDLE_SPEED = 400;
+
+    // Margem das raquetes em relação a bordas laterais
+    const qreal PADDLE_MARGIN = 10;
+
+    // Tamanho da bola
+    const QSizeF BALL_SIZE = QSizeF(20, 20);
+
+    // Velocidade inicial da bola (pixels por segundo)
+    const qreal BALL_INITIAL_SPEED = 300;
+
+    // Aumento de velocidade da bola a cada rebatida (para deixar o jogo mais desafiador)
+    const qreal BALL_SPEED_INCREASE_FACTOR = 1.05;
 
     // Paredes (Cima e Baixo)
-    const int WALL_THICKNESS = 20;
+    const int WALL_THICKNESS = 10;
 
-    // Gol (Direito e Esquerdo)
-    const int GOAL_WIDTH = 5;
+    // Espessura do Gol (Direito e Esquerdo)
+    const int GOAL_WIDTH = 2;
 
 }
 

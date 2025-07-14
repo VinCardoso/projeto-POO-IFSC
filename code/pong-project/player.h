@@ -8,7 +8,9 @@
 class player : public QObject
 {
     Q_OBJECT
+
 public:
+    // Construtor do jogador.
     explicit player(QObject *parent = nullptr);
 
     // Adicionar Pontos ao Jogador
@@ -32,10 +34,10 @@ public:
     Qt::Key getMoveDownKey() const;
 
 private:
-    int p_score;
-    Paddle* p_paddle;
-    Qt::Key p_moveUpKey;
-    Qt::Key p_moveDownKey;
+    int p_score;         // Pontuação do jogador
+    Paddle* p_paddle;    // Ponteiro para a raquete controlada por este jogador
+    Qt::Key p_moveUpKey;   // Tecla para mover a raquete para cima
+    Qt::Key p_moveDownKey; // Tecla para mover a raquete para baixo
 
 };
 

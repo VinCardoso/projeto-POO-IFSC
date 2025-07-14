@@ -14,7 +14,7 @@ void player::increaseScore(){
 }
 
 // Pegar a pontuação atual
-void player::getScore() const{
+int player::getScore() const{
     return p_score;
 }
 

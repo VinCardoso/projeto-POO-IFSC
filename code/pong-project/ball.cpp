@@ -1,77 +1,63 @@
 #include "ball.h"
-#include "paddle.h" // Incluir para poder verificar o tipo
-#include <QTimer>
-#include <QList>
-#include <QGraphicsScene>
-#include <QDebug>
+#include <cmath>
 
-#define SCENE_WIDTH 800
-#define SCENE_HEIGHT 400
-#define WALL_THICKNESS 20
-#define GOAL_WIDTH 5
-
-Ball::Ball(QGraphicsItem *parent)
-    : QObject(), QGraphicsEllipseItem(parent)
-{
-    // Cria Bola
-    setRect(0, 0, 20, 20);
-    setBrush(Qt::white);
-
-    // Velocidade inicial da bola
-    _speedX = -2; // Começa se movendo para a esquerda
-    _speedY = 0.5;  // Inicialmente não se move na vertical
+// Construtor da bola.
+Ball::Ball()
+    : game_object(QPointF((Constants::SCENE_WIDTH - Constants::BALL_SIZE.width()) / 2,
+                         (Constants::SCENE_HEIGHT - Constants::BALL_SIZE.height()) / 2),
+                 Constants::BALL_SIZE) {
+    reset(); // Inicializa a bola na posição central com velocidade aleatória.
 }
 
-void Ball::move()
-{
-    // Verificação de Colisão com Raquete
-    QList<QGraphicsItem *> colliding_items = collidingItems();
+// Atualiza a posição da bola.
+void Ball::update(qint64 deltaTime) {
+    // Calcula o deslocamento com base na velocidade e no tempo decorrido.
+    // Convertemos deltaTime de ms para segundos.
+    qreal deltaSeconds = static_cast<qreal>(deltaTime) / 1000.0;
+    o_position += m_velocity.toPointF() * deltaSeconds;
+}
 
-    for (QGraphicsItem *item : colliding_items) {
+// Desenha a bola como um círculo.
+void Ball::draw(QPainter* painter) {
+    painter->setBrush(Qt::white); // Cor da bola
+    painter->setPen(Qt::NoPen);   // Sem borda
+    painter->drawEllipse(getRect()); // Desenha um círculo dentro do retângulo da bola
+}
 
-        Paddle *paddle = dynamic_cast<Paddle*>(item);
+// Reinicia a bola para o centro da tela com uma direção aleatória.
+void Ball::reset() {
+    o_position = QPointF((Constants::SCENE_WIDTH - Constants::BALL_SIZE.width()) / 2,
+                         (Constants::SCENE_HEIGHT - Constants::BALL_SIZE.height()) / 2);
+    m_currentSpeed = Constants::BALL_INITIAL_SPEED;
 
-        if (paddle) {
-            // Colidiu com Raquete
-            qDebug() << "Bateu na Raquete";
-            _speedX = -_speedX * 1.1;
-            qreal paddleCenter = paddle->y() + paddle->rect().height() / 2;
-            qreal ballCenter = y() + rect().height() / 2;
-            _speedY = (ballCenter - paddleCenter) / 100;
-            setPos(x() + _speedX, y() + _speedY);
-            return; // Sai da função após tratar a colisão com paddle
-        }
-    }
+    // Gera um ângulo aleatório para a direção inicial da bola.
+    // Evita ângulos que resultem em movimento puramente horizontal ou vertical.
+    qreal angle;
+    do {
+        angle = QRandomGenerator::global()->generateDouble() * (2.0 * M_PI);
+    } while (qAbs(qCos(angle)) < 0.2 || qAbs(qSin(angle)) < 0.2);
 
-    // Bater nas paredes de cima e de baixo
-    if (y() <= WALL_THICKNESS || y() + rect().height() >= SCENE_HEIGHT - WALL_THICKNESS) {
-        qDebug() << "Bateu na Parede";
-        _speedY = -_speedY;
-    }
+    // Define a velocidade inicial com base no ângulo.
+    m_velocity = QVector2D(m_currentSpeed * qCos(angle), m_currentSpeed * qSin(angle));
+}
 
+// Inverte a componente X da velocidade da bola.
+void Ball::deflectX() {
+    m_velocity.setX(-m_velocity.x());
+}
 
-    // Bater no Gol no lado esquerdo
-    if (x() <= GOAL_WIDTH) {
-        qDebug() << "Gol do Jogador 2!";
+// Inverte a componente Y da velocidade da bola.
+void Ball::deflectY() {
+    m_velocity.setY(-m_velocity.y());
+}
 
-        // Reposiciona a bola no centro
-        setPos(SCENE_WIDTH / 2.0 - rect().width() / 2.0, SCENE_HEIGHT / 2.0 - rect().height() / 2.0);
-        _speedX = 2;
-        _speedY = 0.5;
-        return;
-    }
+// Aumenta a velocidade da bola.
+void Ball::increaseSpeed() {
+    m_currentSpeed *= Constants::BALL_SPEED_INCREASE_FACTOR;
+    m_velocity = m_velocity.normalized() * m_currentSpeed; // Mantém a direção, mas aumenta a magnitude
+}
 
-    // Bater no Gol no lado direito
-    if (x() + rect().width() >= SCENE_WIDTH - GOAL_WIDTH) {
-        qDebug() << "Gol do Jogador 1!";
-
-        // Reposiciona a bola no centro
-        setPos(SCENE_WIDTH / 2.0 - rect().width() / 2.0, SCENE_HEIGHT / 2.0 - rect().height() / 2.0);
-        _speedX = 1;
-        _speedY = 0.5;
-        return;
-    }
-
-    // Move a bola com base na sua velocidade
-    setPos(x() + _speedX, y() + _speedY);
+// Retorna a velocidade atual da bola.
+QVector2D Ball::getVelocity() const {
+    return m_velocity;
 }

@@ -11,20 +11,24 @@ CONFIG += c++17
 SOURCES += \
     ball.cpp \
     game_object.cpp \
+    goal.cpp \
     main.cpp \
     myscene.cpp \
     paddle.cpp \
     player.cpp \
-    qtgraphics.cpp
+    qtgraphics.cpp \
+    wall.cpp
 
 HEADERS += \
     ball.h \
     constants.h \
     game_object.h \
+    goal.h \
     myscene.h \
     paddle.h \
     player.h \
-    qtgraphics.h
+    qtgraphics.h \
+    wall.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
