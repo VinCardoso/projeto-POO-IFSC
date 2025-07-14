@@ -17,14 +17,14 @@ MyScene::MyScene(QObject *parent)
 
     // Configura o timer do jogo.
     m_gameTimer = new QTimer(this);
+
     // Conecta o sinal timeout do timer ao slot updateGame.
     connect(m_gameTimer, &QTimer::timeout, this, &MyScene::updateGame);
 
     initializeGameObjects(); // Cria e configura todos os objetos do jogo
 }
-MyScene::~MyScene(){
 
-}
+MyScene::~MyScene(){}
 
 // Inicializa todos os objetos do jogo.
 void MyScene::initializeGameObjects() {
@@ -151,6 +151,7 @@ void MyScene::handleCollisions() {
         if (m_ball->getVelocity().x() < 0) {
             m_ball->deflectX();
             m_ball->increaseSpeed();
+
             // Ajusta a posição da bola para evitar que ela "grude" na raquete
             m_ball->setPosition(QPointF(m_player1Paddle->getRect().right(), m_ball->getPosition().y()));
         }
@@ -161,6 +162,7 @@ void MyScene::handleCollisions() {
         if (m_ball->getVelocity().x() > 0) {
             m_ball->deflectX();
             m_ball->increaseSpeed();
+
             // Ajusta a posição da bola
             m_ball->setPosition(QPointF(m_player2Paddle->getRect().left() - m_ball->getSize().width(), m_ball->getPosition().y()));
         }
@@ -171,6 +173,7 @@ void MyScene::handleCollisions() {
 void MyScene::checkGoals() {
 
     if (m_ball->getRect().intersects(m_goal1->getRect())) {
+
         // Bola atingiu o gol do Player 1, ponto para o Player 2
         m_player2->increaseScore();
         qDebug() << "Gol! Player 2: " << m_player2->getScore();
@@ -178,6 +181,7 @@ void MyScene::checkGoals() {
         m_ball->reset(); // Reinicia a bola
 
     } else if (m_ball->getRect().intersects(m_goal2->getRect())) {
+
         // Bola atingiu o gol do Player 2, ponto para o Player 1
         m_player1->increaseScore();
         qDebug() << "Gol! Player 1: " << m_player1->getScore();

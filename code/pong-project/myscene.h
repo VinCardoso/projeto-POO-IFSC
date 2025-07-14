@@ -52,7 +52,7 @@ signals:
     // Sinal emitido quando a pontuação é atualizada.
     void scoreUpdated(int player1Score, int player2Score);
 
-    // Sinal emitido quando o jogo termina (se a pontuação máxima for atingida).
+    // Sinal emitido quando o jogo termina
     void gameOver(int winnerPlayerID);
 
     // Sinal para indicar que a cena precisa ser redesenhada.

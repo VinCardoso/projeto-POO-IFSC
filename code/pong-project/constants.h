@@ -2,7 +2,6 @@
 #define CONSTANTS_H
 
 #include <QSizeF>
-#include <QPointF>
 
 namespace Constants {
 
@@ -10,6 +9,7 @@ namespace Constants {
     const int SCENE_WIDTH = 800;
     const int SCENE_HEIGHT = 400;
 
+    // Dimensão da parte de interface superior
     const int UI_HEADER_HEIGHT = 60;
 
     // Tamanho da Raquete
@@ -27,7 +27,7 @@ namespace Constants {
     // Velocidade inicial da bola (pixels por segundo)
     const qreal BALL_INITIAL_SPEED = 300;
 
-    // Aumento de velocidade da bola a cada rebatida (para deixar o jogo mais desafiador)
+    // Aumento de velocidade da bola a cada rebatida
     const qreal BALL_SPEED_INCREASE_FACTOR = 1.05;
 
     // Paredes (Cima e Baixo)

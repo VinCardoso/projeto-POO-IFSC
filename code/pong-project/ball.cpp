@@ -12,7 +12,6 @@ Ball::Ball()
 // Atualiza a posição da bola.
 void Ball::update(qint64 deltaTime) {
     // Calcula o deslocamento com base na velocidade e no tempo decorrido.
-    // Convertemos deltaTime de ms para segundos.
     qreal deltaSeconds = static_cast<qreal>(deltaTime) / 1000.0;
     o_position += m_velocity.toPointF() * deltaSeconds;
 }
@@ -31,7 +30,6 @@ void Ball::reset() {
     m_currentSpeed = Constants::BALL_INITIAL_SPEED;
 
     // Gera um ângulo aleatório para a direção inicial da bola.
-    // Evita ângulos que resultem em movimento puramente horizontal ou vertical.
     qreal angle;
     do {
         angle = QRandomGenerator::global()->generateDouble() * (2.0 * M_PI);
