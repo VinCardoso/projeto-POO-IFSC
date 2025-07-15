@@ -36,6 +36,9 @@ namespace Constants {
     // Espessura do Gol (Direito e Esquerdo)
     const int GOAL_WIDTH = 2;
 
+    // Pontuação necessária para vencer o jogo
+    const int WINNING_SCORE = 5;
+
 }
 
 #endif // CONSTANTS_H

@@ -28,10 +28,14 @@ public:
     ~MyScene();
 
     // Inicia o loop do jogo.
-    void startGame();
+    // void startGame();
 
-    // Reinicia o jogo para o estado inicial.
-    void resetGame();
+    void pause();   // Pausa o loop do jogo
+    void resume();  // Continua o loop do jogo
+    void resetGame(); // Reinicia o jogo para o estado inicial
+    void togglePause(); // Retorna Jogo Pausado
+
+    bool isPaused() const;
 
     // Retorna a lista de todos os objetos do jogo para desenho.
     const QList<game_object*>& getAllGameObjects() const;
@@ -65,7 +69,7 @@ private slots:
 
 private:
 
-    // Inicializa todos os objetos do jogo (bola, raquetes, paredes, gols).
+    // Inicializa todos os objetos do jogo (-, raquetes, paredes, gols).
     void initializeGameObjects();
 
     // Gerencia as colisões entre a bola e outros objetos.
@@ -89,6 +93,8 @@ private:
 
     QTimer* m_gameTimer;        // Timer para o loop principal do jogo
     QElapsedTimer m_elapsedTimer; // Timer para calcular o tempo decorrido (deltaTime)
+
+    bool m_isPaused; // Controla se o jogo está pausado
 };
 
 #endif // MYSCENE_H

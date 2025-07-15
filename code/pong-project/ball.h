@@ -37,6 +37,8 @@ public:
     // Retorna a velocidade atual da bola.
     QVector2D getVelocity() const;
 
+    void setVelocity(const QVector2D& velocity);
+
 private:
     QVector2D m_velocity; // Vetor de velocidade (direção e magnitude)
     qreal m_currentSpeed; // Velocidade atual da bola

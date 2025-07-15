@@ -13,7 +13,8 @@ MyScene::MyScene(QObject *parent)
     m_goal1(nullptr),
     m_goal2(nullptr),
     m_player1(nullptr),
-    m_player2(nullptr) {
+    m_player2(nullptr),
+    m_isPaused(true){
 
     // Configura o timer do jogo.
     m_gameTimer = new QTimer(this);
@@ -66,15 +67,30 @@ void MyScene::initializeGameObjects() {
     m_gameObjects.append(m_ball);
 }
 
-// Inicia o loop do jogo.
-void MyScene::startGame() {
-    m_elapsedTimer.start(); // Inicia o timer para calcular o deltaTime
-    m_gameTimer->start(1000 / 60); // Inicia o timer para 60 FPS (aproximadamente 16ms por frame)
-    qDebug() << "Jogo iniciado!";
+void MyScene::pause() {
+    m_gameTimer->stop();
+    m_isPaused = true;
+    qDebug() << "Jogo pausado.";
+}
+
+void MyScene::resume() {
+    m_elapsedTimer.start();
+    m_gameTimer->start(1000 / 60); // Inicia o timer para 60 FPS
+    m_isPaused = false;
+    qDebug() << "Jogo continuado.";
+}
+
+void MyScene::togglePause() {
+    if (m_isPaused) {
+        resume();
+    } else {
+        pause();
+    }
 }
 
 // Reinicia o jogo para o estado inicial.
 void MyScene::resetGame() {
+    pause();
     m_ball->reset(); // Reinicia a bola
     m_player1->resetScore(); // Reseta a pontuação dos jogadores
     m_player2->resetScore();
@@ -114,6 +130,9 @@ player* MyScene::getPlayer2() const {
 
 // Slot principal do loop do jogo.
 void MyScene::updateGame() {
+    if (m_isPaused) { // Se o jogo está pausado, não faz nada
+        return;
+    }
     qint64 deltaTime = m_elapsedTimer.restart(); // Calcula o tempo decorrido desde a última chamada
 
     // Atualiza todos os objetos do jogo.
@@ -145,32 +164,64 @@ void MyScene::handleCollisions() {
     }
 
     // Colisão com raquetes
-    if (m_ball->getRect().intersects(m_player1Paddle->getRect())) {
+    if (m_ball->getRect().intersects(m_player1Paddle->getRect()) && m_ball->getVelocity().x() < 0) {
 
-        // Verifica se a bola está vindo na direção da raquete (para evitar múltiplas colisões)
-        if (m_ball->getVelocity().x() < 0) {
-            m_ball->deflectX();
-            m_ball->increaseSpeed();
+        // Calcula o ponto relativo de impacto na raquete (-1.0 topo, 0.0 centro, 1.0 base)
+        qreal paddleCenterY = m_player1Paddle->getPosition().y() + (m_player1Paddle->getSize().height() / 2.0);
+        qreal ballCenterY = m_ball->getPosition().y() + (m_ball->getSize().height() / 2.0);
+        qreal relativeIntersectY = (paddleCenterY - ballCenterY) / (m_player1Paddle->getSize().height() / 2.0);
 
-            // Ajusta a posição da bola para evitar que ela "grude" na raquete
-            m_ball->setPosition(QPointF(m_player1Paddle->getRect().right(), m_ball->getPosition().y()));
-        }
+        // Calcula o novo ângulo de reflexão baseado no ponto de impacto O ângulo máximo de reflexão será de 60 graus (para cima ou para baixo)
+        qreal maxBounceAngle = 60.0 * (M_PI / 180.0); // 60 graus em radianos
+        qreal bounceAngle = relativeIntersectY * maxBounceAngle;
 
-    } else if (m_ball->getRect().intersects(m_player2Paddle->getRect())) {
+        // Calcula o novo vetor de velocidade com base no ângulo e na velocidade atual
+        qreal currentSpeed = m_ball->getVelocity().length();
+        QVector2D newVelocity;
+        newVelocity.setX(currentSpeed * cos(bounceAngle));
+        newVelocity.setY(currentSpeed * -sin(bounceAngle)); // O eixo Y é invertido na tela
 
-        // Verifica se a bola está vindo na direção da raquete
-        if (m_ball->getVelocity().x() > 0) {
-            m_ball->deflectX();
-            m_ball->increaseSpeed();
+        // Garante que a bola vá para a direita após a rebatida
+        newVelocity.setX(abs(newVelocity.x()));
 
-            // Ajusta a posição da bola
-            m_ball->setPosition(QPointF(m_player2Paddle->getRect().left() - m_ball->getSize().width(), m_ball->getPosition().y()));
-        }
+        m_ball->setVelocity(newVelocity); // Define a nova velocidade
+        m_ball->increaseSpeed();          // Aumenta a velocidade como antes
+
+        // Ajusta a posição da bola para evitar que ela "grude" na raquete
+        m_ball->setPosition(QPointF(m_player1Paddle->getRect().right(), m_ball->getPosition().y()));
+
+    } else if (m_ball->getRect().intersects(m_player2Paddle->getRect()) && m_ball->getVelocity().x() > 0) {
+        // Lógica similar para a raquete do jogador 2
+        qreal paddleCenterY = m_player2Paddle->getPosition().y() + (m_player2Paddle->getSize().height() / 2.0);
+        qreal ballCenterY = m_ball->getPosition().y() + (m_ball->getSize().height() / 2.0);
+        qreal relativeIntersectY = (paddleCenterY - ballCenterY) / (m_player2Paddle->getSize().height() / 2.0);
+
+        qreal maxBounceAngle = 60.0 * (M_PI / 180.0);
+        qreal bounceAngle = relativeIntersectY * maxBounceAngle;
+
+        qreal randomFactor = (QRandomGenerator::global()->generateDouble() - 0.5) * (10.0 * M_PI / 180.0);
+        bounceAngle += randomFactor;
+
+        qreal currentSpeed = m_ball->getVelocity().length();
+        QVector2D newVelocity;
+        newVelocity.setX(currentSpeed * cos(bounceAngle));
+        newVelocity.setY(currentSpeed * -sin(bounceAngle));
+
+        // Garante que a bola vá para a esquerda após a rebatida
+        newVelocity.setX(-abs(newVelocity.x()));
+
+        m_ball->setVelocity(newVelocity); // Define a nova velocidade
+        m_ball->increaseSpeed();          // Aumenta a velocidade como antes
+
+        // Ajusta a posição da bola para evitar que ela "grude"
+        m_ball->setPosition(QPointF(m_player2Paddle->getRect().left() - m_ball->getSize().width(), m_ball->getPosition().y()));
     }
 }
 
 // Verifica se a bola atingiu um gol.
 void MyScene::checkGoals() {
+
+    int winner = 0;
 
     if (m_ball->getRect().intersects(m_goal1->getRect())) {
 
@@ -178,7 +229,12 @@ void MyScene::checkGoals() {
         m_player2->increaseScore();
         qDebug() << "Gol! Player 2: " << m_player2->getScore();
         emit scoreUpdated(m_player1->getScore(), m_player2->getScore());
-        m_ball->reset(); // Reinicia a bola
+
+        if (m_player2->getScore() >= Constants::WINNING_SCORE) {
+            winner = 2;
+        } else {
+            m_ball->reset(); // Reinicia a bola se o jogo não acabou
+        }
 
     } else if (m_ball->getRect().intersects(m_goal2->getRect())) {
 
@@ -186,7 +242,22 @@ void MyScene::checkGoals() {
         m_player1->increaseScore();
         qDebug() << "Gol! Player 1: " << m_player1->getScore();
         emit scoreUpdated(m_player1->getScore(), m_player2->getScore());
-        m_ball->reset(); // Reinicia a bola
+
+        if (m_player1->getScore() >= Constants::WINNING_SCORE) {
+            winner = 1;
+        } else {
+            m_ball->reset(); // Reinicia a bola se o jogo não acabou
+        }
 
     }
+
+    // Se houve um vencedor, emite o sinal de fim de jogo
+    if (winner != 0) {
+         pause();
+        emit gameOver(winner);
+    }
+}
+
+bool MyScene::isPaused() const {
+    return m_isPaused;
 }

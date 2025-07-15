@@ -59,3 +59,7 @@ void Ball::increaseSpeed() {
 QVector2D Ball::getVelocity() const {
     return m_velocity;
 }
+
+void Ball::setVelocity(const QVector2D& velocity) {
+    m_velocity = velocity;
+}

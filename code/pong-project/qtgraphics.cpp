@@ -3,7 +3,9 @@
 #include <QMessageBox> // Para exibir mensagens ao usuário
 
 qtGraphics::qtGraphics(QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent),
+    m_gameIsRunning(false),
+    m_isGameOver(false)
 {
     // A altura total da janela será a altura da UI + a altura da cena do jogo.
     setFixedSize(Constants::SCENE_WIDTH, Constants::SCENE_HEIGHT + Constants::UI_HEADER_HEIGHT);
@@ -21,6 +23,14 @@ qtGraphics::qtGraphics(QWidget *parent)
     m_scoreLabel->setAlignment(Qt::AlignCenter);
     m_scoreLabel->setFont(QFont("Arial", 24, QFont::Bold));
     m_scoreLabel->setStyleSheet("color: white; background-color: #333; padding: 5px;");
+    m_scoreLabel->setGeometry(0, 0, width(), Constants::UI_HEADER_HEIGHT);
+    m_scoreLabel->hide(); // Esconde o placar no início
+
+    m_messageLabel = new QLabel("", this);
+    m_messageLabel->hide();
+
+    // Chama o método para configurar o menu inicial
+    setupMenu();
 
     // Define uma altura fixa para o rótulo da pontuação para controlar o layout
     m_scoreLabel->setFixedHeight(Constants::UI_HEADER_HEIGHT / 2);
@@ -47,8 +57,6 @@ qtGraphics::qtGraphics(QWidget *parent)
     m_myscene->getPlayer1()->setControlKeys(Qt::Key_W, Qt::Key_S);
     m_myscene->getPlayer2()->setControlKeys(Qt::Key_Up, Qt::Key_Down);
 
-    // Inicia o jogo
-    m_myscene->startGame();
 }
 
 
@@ -78,51 +86,91 @@ void qtGraphics::paintEvent(QPaintEvent* event) {
                      Constants::SCENE_WIDTH / 2, Constants::SCENE_HEIGHT + Constants::UI_HEADER_HEIGHT);
 }
 
-// Evento de pressionar tecla.
+
 void qtGraphics::keyPressEvent(QKeyEvent* event) {
-
-    // Player 1
-    if (event->key() == m_myscene->getPlayer1()->getMoveUpKey()) {
-        m_myscene->getPlayer1Paddle()->setMovingUp(true);
-    } else if (event->key() == m_myscene->getPlayer1()->getMoveDownKey()) {
-        m_myscene->getPlayer1Paddle()->setMovingDown(true);
+    if (!m_gameIsRunning) { // Se o jogo não começou, não faz nada
+        return;
     }
 
-    // Player 2
-    else if (event->key() == m_myscene->getPlayer2()->getMoveUpKey()) {
-        m_myscene->getPlayer2Paddle()->setMovingUp(true);
-    } else if (event->key() == m_myscene->getPlayer2()->getMoveDownKey()) {
-        m_myscene->getPlayer2Paddle()->setMovingDown(true);
+    // Lógica de Pausar o Jogo
+    if (event->key() == Qt::Key_P) {
+        // Só permite pausar/continuar se o jogo não tiver acabado
+        if (!m_isGameOver) {
+            m_myscene->togglePause();
+            if (m_myscene->isPaused()) {
+                m_messageLabel->setText("PAUSADO");
+                m_messageLabel->setGeometry(0, height()/2 - 30, width(), 60);
+                m_messageLabel->show();
+            } else {
+                m_messageLabel->hide();
+            }
+        }
+        return; // Retorna para não processar outras teclas
     }
 
-    // Reiniciar o jogo (ex: tecla R)
-    else if (event->key() == Qt::Key_R) {
+    // Se o jogo estiver pausado (e não for a tecla P), ignora os movimentos
+    if (m_myscene->isPaused()) {
+        return;
+    }
+
+    if (m_playerCount == 2) {
+        // MODO 2 JOGADORES (lógica que você já tinha)
+        if (event->key() == m_myscene->getPlayer1()->getMoveUpKey()) {
+            m_myscene->getPlayer1Paddle()->setMovingUp(true);
+        } else if (event->key() == m_myscene->getPlayer1()->getMoveDownKey()) {
+            m_myscene->getPlayer1Paddle()->setMovingDown(true);
+        } else if (event->key() == m_myscene->getPlayer2()->getMoveUpKey()) {
+            m_myscene->getPlayer2Paddle()->setMovingUp(true);
+        } else if (event->key() == m_myscene->getPlayer2()->getMoveDownKey()) {
+            m_myscene->getPlayer2Paddle()->setMovingDown(true);
+        }
+    } else { // MODO 1 JOGADOR
+        // Usa as teclas do jogador 2 (Cima/Baixo) para mover AMBAS as raquetes
+        if (event->key() == m_myscene->getPlayer2()->getMoveUpKey()) {
+            m_myscene->getPlayer1Paddle()->setMovingUp(true);
+            m_myscene->getPlayer2Paddle()->setMovingUp(true);
+        } else if (event->key() == m_myscene->getPlayer2()->getMoveDownKey()) {
+            m_myscene->getPlayer1Paddle()->setMovingDown(true);
+            m_myscene->getPlayer2Paddle()->setMovingDown(true);
+        }
+    }
+
+    // Lógica para reiniciar e sair (continua igual)
+    if (event->key() == Qt::Key_R) {
+        m_isGameOver = false;
         m_myscene->resetGame();
-        m_messageLabel->hide(); // Esconde a mensagem de Game Over
-        m_myscene->startGame(); // Reinicia o loop do jogo
-    }
-
-    // Sair do jogo (ex: tecla Esc)
-    else if (event->key() == Qt::Key_Escape) {
-        close(); // Fecha a janela
+        m_messageLabel->hide();
+        m_myscene->resume();
+    } else if (event->key() == Qt::Key_Escape) {
+        close();
     }
 }
 
-// Evento de soltar tecla.
+// Faça a mesma lógica para keyReleaseEvent
 void qtGraphics::keyReleaseEvent(QKeyEvent* event) {
-
-    // Player 1
-    if (event->key() == m_myscene->getPlayer1()->getMoveUpKey()) {
-        m_myscene->getPlayer1Paddle()->setMovingUp(false);
-    } else if (event->key() == m_myscene->getPlayer1()->getMoveDownKey()) {
-        m_myscene->getPlayer1Paddle()->setMovingDown(false);
+    if (!m_gameIsRunning) {
+        return;
     }
 
-    // Player 2
-    else if (event->key() == m_myscene->getPlayer2()->getMoveUpKey()) {
-        m_myscene->getPlayer2Paddle()->setMovingUp(false);
-    } else if (event->key() == m_myscene->getPlayer2()->getMoveDownKey()) {
-        m_myscene->getPlayer2Paddle()->setMovingDown(false);
+    if (m_playerCount == 2) {
+        // MODO 2 JOGADORES
+        if (event->key() == m_myscene->getPlayer1()->getMoveUpKey()) {
+            m_myscene->getPlayer1Paddle()->setMovingUp(false);
+        } else if (event->key() == m_myscene->getPlayer1()->getMoveDownKey()) {
+            m_myscene->getPlayer1Paddle()->setMovingDown(false);
+        } else if (event->key() == m_myscene->getPlayer2()->getMoveUpKey()) {
+            m_myscene->getPlayer2Paddle()->setMovingUp(false);
+        } else if (event->key() == m_myscene->getPlayer2()->getMoveDownKey()) {
+            m_myscene->getPlayer2Paddle()->setMovingDown(false);
+        }
+    } else { // MODO 1 JOGADOR
+        if (event->key() == m_myscene->getPlayer2()->getMoveUpKey()) {
+            m_myscene->getPlayer1Paddle()->setMovingUp(false);
+            m_myscene->getPlayer2Paddle()->setMovingUp(false);
+        } else if (event->key() == m_myscene->getPlayer2()->getMoveDownKey()) {
+            m_myscene->getPlayer1Paddle()->setMovingDown(false);
+            m_myscene->getPlayer2Paddle()->setMovingDown(false);
+        }
     }
 }
 
@@ -142,4 +190,56 @@ void qtGraphics::handleGameOver(int winnerPlayerID) {
 // Forçar a reinstanciar da janela.
 void qtGraphics::requestRepaint() {
     update(); // Chama paintEvent() para redesenhar a janela
+}
+
+void qtGraphics::setupMenu() {
+    m_titleLabel = new QLabel("PONG", this);
+    m_titleLabel->setAlignment(Qt::AlignCenter);
+    m_titleLabel->setFont(QFont("Arial", 50, QFont::Bold));
+    m_titleLabel->setStyleSheet("color: white;");
+    m_titleLabel->setGeometry(0, height()/2 - 100, width(), 100);
+
+    m_onePlayerButton = new QPushButton("1 Jogador", this);
+    m_onePlayerButton->setFont(QFont("Arial", 16));
+    m_onePlayerButton->setGeometry(width()/2 - 100, height()/2 + 20, 200, 40);
+
+    m_twoPlayerButton = new QPushButton("2 Jogadores", this);
+    m_twoPlayerButton->setFont(QFont("Arial", 16));
+    m_twoPlayerButton->setGeometry(width()/2 - 100, height()/2 + 70, 200, 40);
+
+    // Conecta o sinal de clique de cada botão ao seu respectivo slot
+    connect(m_onePlayerButton, &QPushButton::clicked, this, &qtGraphics::onOnePlayerClicked);
+    connect(m_twoPlayerButton, &QPushButton::clicked, this, &qtGraphics::onTwoPlayerClicked);
+
+    m_titleLabel->show();
+    m_onePlayerButton->show();
+    m_twoPlayerButton->show();
+}
+
+void qtGraphics::onOnePlayerClicked() {
+    startGameMode(1);
+}
+
+void qtGraphics::onTwoPlayerClicked() {
+    startGameMode(2);
+}
+
+void qtGraphics::startGameMode(int playerCount) {
+    m_playerCount = playerCount;
+    m_gameIsRunning = true;
+
+    // Esconde os elementos do menu
+    m_titleLabel->hide();
+    m_onePlayerButton->hide();
+    m_twoPlayerButton->hide();
+
+    // Mostra o placar
+    m_scoreLabel->show();
+
+    // Define as teclas de controle (como já fazia antes)
+    m_myscene->getPlayer1()->setControlKeys(Qt::Key_W, Qt::Key_S);
+    m_myscene->getPlayer2()->setControlKeys(Qt::Key_Up, Qt::Key_Down);
+
+    // Inicia a lógica e o timer do jogo
+    m_myscene->resume();
 }
