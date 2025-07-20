@@ -69,7 +69,7 @@ void MyScene::initializeGameObjects() {
 void MyScene::pause() {
     m_gameTimer->stop();
     m_isPaused = true;
-    qDebug() << "Jogo pausado.";
+    qDebug() << "Jogo Pausado - Aperte P para Continuar";
 }
 
 void MyScene::resume() {

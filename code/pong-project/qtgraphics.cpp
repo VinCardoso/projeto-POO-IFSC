@@ -92,7 +92,7 @@ void qtGraphics::keyPressEvent(QKeyEvent* event) {
         if (!m_isGameOver) {
             m_myscene->togglePause();
             if (m_myscene->isPaused()) {
-                m_messageLabel->setText("PAUSADO");
+                m_messageLabel->setText("Jogo Pausado - Aperte P para Continuar");
                 m_messageLabel->setGeometry(0, height()/2 - 30, width(), 60);
                 m_messageLabel->show();
             } else {
