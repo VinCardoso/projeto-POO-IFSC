@@ -5,7 +5,7 @@
 
 
 [**Diagrama de Caso de Uso**](/img/case-use-diagram2.png)<br>
-[**Diagrama de Classe**](/img/diagrama-uml.png)<br>
+[**Diagrama de Classe**](/img/diagrama_uml_final.png)<br>
 
 <div align="center">
 

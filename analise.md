@@ -20,11 +20,11 @@ A partida se encerra quando um dos jogadores atinge uma pontuação pré-determi
  
 ## Diagrama de Domínio do problema
 
-- **Partida**: Uma única sessão do jogo, do início ao fim;
+- **Partida**: Controla as regras, colisões entre bola e sabe o que está acontecendo;
+- **Tela**: A interface do jogo e que interpretas as ações do jogador;
 - **Jogador**: É o ator que controla as raquetes, podendo ter um ou dois jogadores;
 - **Raquete**: Objeto que fica nas extremidades da tela com tamanho definido e que pode se movimentar para cima e pra baixo para "defender" a entrada da bola;
-- **Bola**: Objeto que reage ao enconstar com as raquetes indo para o lado oposto, e quando não bate na raquete marca ponto para o jogador do lado adversário;
-- **Placar**: Responsável por Registrar as pontuações;
+- **Bola**: Objeto que reage ao enconstar com as raquetes indo para o lado oposto, ou para cima ou para baixo quanto bate nas paredes inferior e superior, e quando bate no gol marca ponto para o jogador do lado adversário;
 - **Parede**: Extremidade superior e inferior que limita a saída da bola;
 - **Gol**: Parede atrás das raquetes;
 

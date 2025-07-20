@@ -11,9 +11,11 @@ Ball::Ball()
 
 // Atualiza a posição da bola.
 void Ball::update(qint64 deltaTime) {
+
     // Calcula o deslocamento com base na velocidade e no tempo decorrido.
     qreal deltaSeconds = static_cast<qreal>(deltaTime) / 1000.0;
     o_position += m_velocity.toPointF() * deltaSeconds;
+
 }
 
 // Desenha a bola como um círculo.
@@ -25,6 +27,7 @@ void Ball::draw(QPainter* painter) {
 
 // Reinicia a bola para o centro da tela com uma direção aleatória.
 void Ball::reset() {
+
     o_position = QPointF((Constants::SCENE_WIDTH - Constants::BALL_SIZE.width()) / 2,
                          (Constants::SCENE_HEIGHT - Constants::BALL_SIZE.height()) / 2);
     m_currentSpeed = Constants::BALL_INITIAL_SPEED;

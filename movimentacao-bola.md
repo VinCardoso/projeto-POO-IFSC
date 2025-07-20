@@ -26,7 +26,7 @@ Não se Aplica
 ## Fluxo Principal:
 
 ### Inicialização:
-- Começa a se movimentar para o lado esquerdo de forma reta;
+- Começa a se movimentar para um dos lados, com angulo aleatório.
 
 ### Loop do Jogo:
 - Verifica se jogo está pausado;
@@ -38,7 +38,7 @@ Não se Aplica
 - Movimentar para próximo ponto.
 
 ### Finalização:
-- Se for gol, voltar para parte centro e iniciar para o lado oposto da última vez.
+- Se for gol, voltar para parte centro e iniciar fazer inicialização de novo.
 
 ## Fluxo Alternativo:
 Não se aplica
@@ -47,7 +47,7 @@ Não se aplica
 Não se aplica
 
 ## Regras de Negócio
-- Deve iniciar para o lado direito;
+- Deve de forma aleatória escolher um lado para começar, e um angulo aleatório;
 - Ao bater na parede deve mudar o lado com mesmo angulo de batida;
-- Ao bater na raquete, verificar angulo e voltar para lado oposto;
-- Ao bater no gol, dar ponto e reiniciar para lado oposto do anterior;
+- Ao bater na raquete, verificar local onde bateu e calcular novo angulo e voltar para lado oposto;
+- Ao bater no gol, dar ponto e reiniciar trazer nova inicialização, de forma aleatório tanto o lado quanto o angulo inicial;

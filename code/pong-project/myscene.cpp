@@ -1,6 +1,5 @@
 #include "myscene.h"
 #include <QDebug>
-#include <QPointF>
 
 // Construtor da cena do jogo.
 MyScene::MyScene(QObject *parent)
@@ -163,7 +162,7 @@ void MyScene::handleCollisions() {
         }
     }
 
-    // Colisão com raquetes
+    // Colisão com raquete jogador 1
     if (m_ball->getRect().intersects(m_player1Paddle->getRect()) && m_ball->getVelocity().x() < 0) {
 
         // Calcula o ponto relativo de impacto na raquete (-1.0 topo, 0.0 centro, 1.0 base)
@@ -185,23 +184,24 @@ void MyScene::handleCollisions() {
         newVelocity.setX(abs(newVelocity.x()));
 
         m_ball->setVelocity(newVelocity); // Define a nova velocidade
-        m_ball->increaseSpeed();          // Aumenta a velocidade como antes
+        m_ball->increaseSpeed();          // Aumenta a velocidade
 
         // Ajusta a posição da bola para evitar que ela "grude" na raquete
         m_ball->setPosition(QPointF(m_player1Paddle->getRect().right(), m_ball->getPosition().y()));
 
+    // Colisão com raquete jogador 2
     } else if (m_ball->getRect().intersects(m_player2Paddle->getRect()) && m_ball->getVelocity().x() > 0) {
-        // Lógica similar para a raquete do jogador 2
+
+         // Calcula o ponto relativo de impacto na raquete (-1.0 topo, 0.0 centro, 1.0 base)
         qreal paddleCenterY = m_player2Paddle->getPosition().y() + (m_player2Paddle->getSize().height() / 2.0);
         qreal ballCenterY = m_ball->getPosition().y() + (m_ball->getSize().height() / 2.0);
         qreal relativeIntersectY = (paddleCenterY - ballCenterY) / (m_player2Paddle->getSize().height() / 2.0);
 
+        // Calcula o novo ângulo de reflexão baseado no ponto de impacto O ângulo máximo de reflexão será de 60 graus (para cima ou para baixo)
         qreal maxBounceAngle = 60.0 * (M_PI / 180.0);
         qreal bounceAngle = relativeIntersectY * maxBounceAngle;
 
-        qreal randomFactor = (QRandomGenerator::global()->generateDouble() - 0.5) * (10.0 * M_PI / 180.0);
-        bounceAngle += randomFactor;
-
+        // Calcula o novo vetor de velocidade com base no ângulo e na velocidade atual
         qreal currentSpeed = m_ball->getVelocity().length();
         QVector2D newVelocity;
         newVelocity.setX(currentSpeed * cos(bounceAngle));
@@ -211,7 +211,7 @@ void MyScene::handleCollisions() {
         newVelocity.setX(-abs(newVelocity.x()));
 
         m_ball->setVelocity(newVelocity); // Define a nova velocidade
-        m_ball->increaseSpeed();          // Aumenta a velocidade como antes
+        m_ball->increaseSpeed();          // Aumenta a velocidade
 
         // Ajusta a posição da bola para evitar que ela "grude"
         m_ball->setPosition(QPointF(m_player2Paddle->getRect().left() - m_ball->getSize().width(), m_ball->getPosition().y()));
@@ -253,7 +253,8 @@ void MyScene::checkGoals() {
 
     // Se houve um vencedor, emite o sinal de fim de jogo
     if (winner != 0) {
-         pause();
+        m_ball->reset();
+        pause();
         emit gameOver(winner);
     }
 }

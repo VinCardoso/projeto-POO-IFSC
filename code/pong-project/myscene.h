@@ -27,9 +27,6 @@ public:
     // Destrutor. Limpa os objetos do jogo.
     ~MyScene();
 
-    // Inicia o loop do jogo.
-    // void startGame();
-
     void pause();   // Pausa o loop do jogo
     void resume();  // Continua o loop do jogo
     void resetGame(); // Reinicia o jogo para o estado inicial

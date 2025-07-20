@@ -1,6 +1,5 @@
 #include "qtgraphics.h"
 #include <QDebug> // Para mensagens de depuração
-#include <QMessageBox> // Para exibir mensagens ao usuário
 
 qtGraphics::qtGraphics(QWidget *parent)
     : QWidget(parent),
@@ -24,17 +23,12 @@ qtGraphics::qtGraphics(QWidget *parent)
     m_scoreLabel->setFont(QFont("Arial", 24, QFont::Bold));
     m_scoreLabel->setStyleSheet("color: white; background-color: #333; padding: 5px;");
     m_scoreLabel->setGeometry(0, 0, width(), Constants::UI_HEADER_HEIGHT);
-    m_scoreLabel->hide(); // Esconde o placar no início
 
     m_messageLabel = new QLabel("", this);
     m_messageLabel->hide();
 
     // Chama o método para configurar o menu inicial
     setupMenu();
-
-    // Define uma altura fixa para o rótulo da pontuação para controlar o layout
-    m_scoreLabel->setFixedHeight(Constants::UI_HEADER_HEIGHT / 2);
-    // mainLayout->addWidget(m_scoreLabel);
 
     // Rótulo para mensagens de jogo
     m_messageLabel = new QLabel("", this);
@@ -45,7 +39,6 @@ qtGraphics::qtGraphics(QWidget *parent)
     // Define uma altura fixa para o rótulo de mensagem
     m_messageLabel->setFixedHeight(Constants::UI_HEADER_HEIGHT / 2);
     mainLayout->addWidget(m_messageLabel);
-    m_messageLabel->hide(); // Esconde inicialmente
 
     // Conecta os sinais da myScene aos slots da qtGraphics
     connect(m_myscene, &MyScene::scoreUpdated, this, &qtGraphics::updateScoreDisplay);
@@ -63,7 +56,7 @@ qtGraphics::qtGraphics(QWidget *parent)
 qtGraphics::~qtGraphics(){}
 
 
-// Evento de pintura, responsável por desenhar o jogo.
+// Evento responsável por desenhar o jogo.
 void qtGraphics::paintEvent(QPaintEvent* event) {
     Q_UNUSED(event);
     QPainter painter(this);
@@ -74,6 +67,7 @@ void qtGraphics::paintEvent(QPaintEvent* event) {
     // Desenha todos os objetos da cena do jogo.
     for (game_object* obj : m_myscene->getAllGameObjects()) {
         painter.save(); // Salva o estado atual do pintor
+
         // Translada o pintor para desenhar os objetos abaixo da área de score/message
         painter.translate(0, Constants::UI_HEADER_HEIGHT);
         obj->draw(&painter);
@@ -108,13 +102,24 @@ void qtGraphics::keyPressEvent(QKeyEvent* event) {
         return; // Retorna para não processar outras teclas
     }
 
+    // Lógica para reiniciar e sair (continua igual)
+    if (event->key() == Qt::Key_R) {
+        m_isGameOver = false;
+        m_myscene->resetGame();
+        m_messageLabel->hide();
+        m_myscene->resume();
+    } else if (event->key() == Qt::Key_Escape) {
+        // Fechar Jogo
+        close();
+    }
+
     // Se o jogo estiver pausado (e não for a tecla P), ignora os movimentos
     if (m_myscene->isPaused()) {
         return;
     }
 
     if (m_playerCount == 2) {
-        // MODO 2 JOGADORES (lógica que você já tinha)
+        // Teclas para modo 2 Jogadores
         if (event->key() == m_myscene->getPlayer1()->getMoveUpKey()) {
             m_myscene->getPlayer1Paddle()->setMovingUp(true);
         } else if (event->key() == m_myscene->getPlayer1()->getMoveDownKey()) {
@@ -124,8 +129,8 @@ void qtGraphics::keyPressEvent(QKeyEvent* event) {
         } else if (event->key() == m_myscene->getPlayer2()->getMoveDownKey()) {
             m_myscene->getPlayer2Paddle()->setMovingDown(true);
         }
-    } else { // MODO 1 JOGADOR
-        // Usa as teclas do jogador 2 (Cima/Baixo) para mover AMBAS as raquetes
+    } else { // Teclas para modo 1 Jogadores
+        // As teclas do jogador 2 (Cima/Baixo) move AMBAS as raquetes
         if (event->key() == m_myscene->getPlayer2()->getMoveUpKey()) {
             m_myscene->getPlayer1Paddle()->setMovingUp(true);
             m_myscene->getPlayer2Paddle()->setMovingUp(true);
@@ -135,25 +140,16 @@ void qtGraphics::keyPressEvent(QKeyEvent* event) {
         }
     }
 
-    // Lógica para reiniciar e sair (continua igual)
-    if (event->key() == Qt::Key_R) {
-        m_isGameOver = false;
-        m_myscene->resetGame();
-        m_messageLabel->hide();
-        m_myscene->resume();
-    } else if (event->key() == Qt::Key_Escape) {
-        close();
-    }
 }
 
-// Faça a mesma lógica para keyReleaseEvent
+// Lógica para mudar estado quando soltar botões
 void qtGraphics::keyReleaseEvent(QKeyEvent* event) {
     if (!m_gameIsRunning) {
         return;
     }
 
     if (m_playerCount == 2) {
-        // MODO 2 JOGADORES
+        // Teclas para modo 2 Jogadores
         if (event->key() == m_myscene->getPlayer1()->getMoveUpKey()) {
             m_myscene->getPlayer1Paddle()->setMovingUp(false);
         } else if (event->key() == m_myscene->getPlayer1()->getMoveDownKey()) {
@@ -163,7 +159,7 @@ void qtGraphics::keyReleaseEvent(QKeyEvent* event) {
         } else if (event->key() == m_myscene->getPlayer2()->getMoveDownKey()) {
             m_myscene->getPlayer2Paddle()->setMovingDown(false);
         }
-    } else { // MODO 1 JOGADOR
+    } else { // Teclas para modo 1 Jogadores
         if (event->key() == m_myscene->getPlayer2()->getMoveUpKey()) {
             m_myscene->getPlayer1Paddle()->setMovingUp(false);
             m_myscene->getPlayer2Paddle()->setMovingUp(false);
@@ -201,11 +197,11 @@ void qtGraphics::setupMenu() {
 
     m_onePlayerButton = new QPushButton("1 Jogador", this);
     m_onePlayerButton->setFont(QFont("Arial", 16));
-    m_onePlayerButton->setGeometry(width()/2 - 100, height()/2 + 20, 200, 40);
+    m_onePlayerButton->setGeometry(width()/2 - 100, height()/2 + ((Constants::SCENE_HEIGHT/5)*2 - 50), 200, 40);
 
     m_twoPlayerButton = new QPushButton("2 Jogadores", this);
     m_twoPlayerButton->setFont(QFont("Arial", 16));
-    m_twoPlayerButton->setGeometry(width()/2 - 100, height()/2 + 70, 200, 40);
+    m_twoPlayerButton->setGeometry(width()/2 - 100, height()/2 + (Constants::SCENE_HEIGHT/5)*2, 200, 40);
 
     // Conecta o sinal de clique de cada botão ao seu respectivo slot
     connect(m_onePlayerButton, &QPushButton::clicked, this, &qtGraphics::onOnePlayerClicked);
@@ -236,7 +232,7 @@ void qtGraphics::startGameMode(int playerCount) {
     // Mostra o placar
     m_scoreLabel->show();
 
-    // Define as teclas de controle (como já fazia antes)
+    // Define as teclas de controle
     m_myscene->getPlayer1()->setControlKeys(Qt::Key_W, Qt::Key_S);
     m_myscene->getPlayer2()->setControlKeys(Qt::Key_Up, Qt::Key_Down);
 
