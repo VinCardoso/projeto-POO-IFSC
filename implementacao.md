@@ -3,14 +3,6 @@
 ## Ferramentas e Bibliotecas
 O projeto foi desenvolvido em C++ utilizando o Qt Creator.
 
-### Bibliotecas utilizadas:
-
-- Módulo Qt Widgets: Para a criação da janela principal e de todos os elementos de interface, como botões e rótulos de texto.
-
-- Módulo Qt GUI: Para a renderização 2D customizada através do QPainter, que foi essencial para desenhar todos os objetos do jogo (bola, raquetes, paredes).
-
-- Módulo Qt Core: Para a estrutura fundamental da aplicação, o sistema de sinais e slots (signals e slots) para a comunicação entre objetos, e o loop de eventos com QTimer para controlar a animação e a lógica do jogo.
-
 ### Arquitetura do Projeto
 A implementação seguiu o princípio da Separação de Preocupações, dividindo o projeto em duas classes centrais:
 
